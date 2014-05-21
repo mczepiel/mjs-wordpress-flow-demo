@@ -16,18 +16,14 @@
                 "selectedPost": {"<-": "@articlesController.selection.0"}
             }
         },
-        "header": {
-            "prototype": "ui/header.reel",
+        "actionEventListener": {
+            "prototype": "montage/core/event/action-event-listener",
             "properties": {
-                "element": {"#": "header"},
-                "articlesController": {"@": "articlesController"}
-            }
-        },
-        "wordpressConnector": {
-            "prototype": "montage-wordpress/core/wordpress-connector",
-            "properties": {
-                "host": "demo.phault.net",
-                "path": "posts"
+                "action": "hidePost",
+                "handler": {"@": "owner"}
+            },
+            "_dev": {
+                "isHidden": true
             }
         },
         "articlesController": {
@@ -36,8 +32,7 @@
                 "content": {"<-": "@wordpressConnector.articles"}
             }
         },
-
-         "card1": {
+        "card1": {
             "prototype": "ui/card.reel",
             "properties": {
                 "element": {"#": "card1"}
@@ -50,7 +45,6 @@
             "prototype": "montage/ui/flow.reel",
             "properties": {
                 "element": {"#": "flow"},
-                "contentController": {"@": "articlesController"},
                 "cameraFov": 50,
                 "cameraPosition": [
                     -3.949999999998454,
@@ -62,6 +56,7 @@
                     -10,
                     357.4249999999979
                 ],
+                "contentController": {"@": "articlesController"},
                 "flowEditorMetadata": {
                     "flowEditorVersion": 0.1,
                     "shapes": [
@@ -143,6 +138,20 @@
                 "selectedIndexScrollingOffset": 0
             }
         },
+        "header": {
+            "prototype": "ui/header.reel",
+            "properties": {
+                "element": {"#": "header"},
+                "articlesController": {"@": "articlesController"}
+            },
+            "listeners": [
+                {
+                    "type": "hidePost",
+                    "useCapture": false,
+                    "listener": {"@": "actionEventListener"}
+                }
+            ]
+        },
         "post": {
             "prototype": "ui/post.reel",
             "properties": {
@@ -150,6 +159,14 @@
             },
             "bindings": {
                 "article": {"<-": "@articlesController.selection.0"}
+            }
+        },
+        "wordpressConnector": {
+            "prototype": "montage-wordpress/core/wordpress-connector",
+            "properties": {
+                "host": "demo.phault.net",
+                "path": "posts",
+                "categoryFilter": "featured"
             }
         }
     }
